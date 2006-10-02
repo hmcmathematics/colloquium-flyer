@@ -32,13 +32,13 @@
 %% $Id$
 %%
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{colloqflyer}[2001/05/25 LaTeX class for typesetting colloquium flyers]
+\ProvidesClass{colloqflyer}[2001/05/25 LaTeX class for colloquium flyers]
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax %%% Change if we add options.
 \LoadClass[12pt,oneside]{article}
 
 %% Get some useful information about errors.
-\setcounter{errorcontextlines}{25}
+\setcounter{errorcontextlines}{100}
  
 \RequirePackage{url}
 \RequirePackage{avant}
@@ -70,31 +70,32 @@
 %%% Define some additional informational fields.
 
 \renewcommand{\abstract}[1]{\gdef\@abstract{#1}}
-\newcommand{\@abstract}{\@latex@warning@no@line{No \noexpand\colloqsite given}}
-\newcommand{\colloqsite}[1]{\gdef\@colloqsite{#1}}
-\newcommand{\@colloqsite}{\@latex@warning@no@line{No \noexpand\colloqsite given}}
-\urldef{\@colloquiumwebsite}{\url}{\@colloqsite}
+\newcommand{\@abstract}{\ClassWarningNoLine{colloqflyer}{No
+    \noexpand\abstract given}}
+\newcommand{\colloqsite}[1]{\gdef\@colloqsite{\begingroup\nobreak\indent\ttfamily#1\endgroup}}
+\newcommand{\@colloqsite}{\ClassWarningNoLine{colloqflyer}{No
+    \noexpand\colloqsite given}} 
+
+
 \newcommand{\speaker}[1]{\gdef\@speaker{#1}}
-\newcommand{\@speaker}{\@latex@warning@no@line{No \noexpand\speaker given}}
+\newcommand{\@speaker}{\ClassWarningNoLine{colloqflyer}{No \noexpand\speaker given}}
 \newcommand{\talktime}[1]{\gdef\@talktime{#1}}
-\newcommand{\@talktime}{\@latex@warning@no@line{No
+\newcommand{\@talktime}{\ClassWarningNoLine{colloqflyer}{No
     \noexpand\talktime given}}
 \newcommand{\talklocation}[1]{\gdef\@talklocation{#1}}
-\newcommand{\@talklocation}{\@latex@warning@no@line{No
+\newcommand{\@talklocation}{\ClassWarningNoLine{colloqflyer}{No
     \noexpand\talklocation given}}
 \newcommand{\refreshmenttime}[1]{\gdef\@refreshmenttime{#1}}
-\newcommand{\@refreshmenttime}{\@latex@warning@no@line{No
+\newcommand{\@refreshmenttime}{\ClassWarningNoLine{colloqflyer}{No
     \noexpand\refreshmenttime given}}
 \newcommand{\refreshmentlocation}[1]{\gdef\@refreshmentlocation{#1}}
-\newcommand{\@refreshmentlocation}{\@latex@warning@no@line{No
+\newcommand{\@refreshmentlocation}{\ClassWarningNoLine{colloqflyer}{No
     \noexpand\refreshmentlocation given}}
 \newcommand{\host}[1]{\gdef\@host{#1}}
-\newcommand{\@host}{\@latex@warning@no@line{No \noexpand\host given}}
+\newcommand{\@host}{\ClassWarningNoLine{colloqflyer}{No \noexpand\host given}}
 \newcommand{\hostphone}[1]{\gdef\@hostphone{#1}}
-%\newcommand{\@hostphone}{\@latex@warning@no@line{No \noexpand\hostphone given}}
-\newcommand{\hostemail}[1]{\gdef\@hostemail{#1}}
-%\newcommand{\hostemail}[1]{\urldef\@hostemailurl\@hostemail{#1}}
-\newcommand{\@hostemail}{\@latex@warning@no@line{No \noexpand\hostemail given}}
+\newcommand{\hostemail}[1]{\gdef\@hostemail{\begingroup\nobreak\indent\ttfamily#1\endgroup}}
+\newcommand{\@hostemail}{\ClassWarningNoLine{colloqflyer}{No \noexpand\hostemail given}}
 
 
 
@@ -152,9 +153,9 @@ Hosted by \@host{}.  If interested in attending,
     {e-mail \@hostemail}%
   }%
   {call \@hostphone{}%
-    \ifthenelse{\isundefined{\@hostemail}}%
-    {}%
-    { or e-mail \@hostemail}}%
+    \ifthenelse{\not\isundefined{\@hostemail}}%
+    { or e-mail \@hostemail}%
+    {}}%
 .
 
 \linefill
@@ -162,7 +163,7 @@ Hosted by \@host{}.  If interested in attending,
 {\large \textbf{\textsc{For More Information\ldots{}}}}
 
 For Math Colloquium information, visit the website:\\
-\@colloquiumwebsite
+\@colloqsite
 
 \linefill
 
@@ -191,7 +192,6 @@ For Math Colloquium information, visit the website:\\
 \global\let\@hostphone\relax
 \global\let\@hostemail\relax
 \global\let\@colloqsite\relax
-\global\let\@colloquiumsite\relax
 
 }                               % End of \flyer command.
 
