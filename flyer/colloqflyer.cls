@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2005 Claire M. Connelly and the 
+% Copyright (C) 2009 Claire M. Connelly and the 
 % Department of Mathematics, Harvey Mudd College
 % 
 % This program is free software; you can redistribute it and/or modify
@@ -32,73 +32,115 @@
 %% $Id$
 %%
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{colloqflyer}[2001/05/25 LaTeX class for colloquium flyers]
+\ProvidesClass{colloqflyer}[2009/01/20 LaTeX class for colloquium flyers]
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax %%% Change if we add options.
 \LoadClass[12pt,oneside]{article}
 
-%% Get some useful information about errors.
-\setcounter{errorcontextlines}{100}
- 
 \RequirePackage{url}
 \RequirePackage{avant}
 \renewcommand{\rmdefault}{pag}  % Use Avant Garde as the roman font.
-\RequirePackage{graphicx}
+\RequirePackage{soul}
+\RequirePackage{eso-pic}
+\RequirePackage{graphics}
+\RequirePackage{microtype}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{latexsym}
+\RequirePackage[%
+  text={6in,9.5in},
+  left=2in]{geometry}
 \RequirePackage{xspace}
 \RequirePackage{color}
 \RequirePackage{ifthen}
 
 %%% Tinker with margins and such -- this is a flyer, not a multipage
 %%% document, after all.
-\setlength{\headheight}{0pt}
-\setlength{\headsep}{0pt}
-\setlength{\footskip}{0pt}
-\setlength{\textheight}{723pt}
-\setlength{\topmargin}{-25pt}
-\setlength{\parindent}{0pt}
-%\setlength{\oddsidemargin}{-15pt}
-%\setlength{\textwidth}{450pt}
+
+\setlength{\parindent}{0in}
+\setlength{\parskip}{1ex}
+
+
+%%% Handle the background image.
+\newcommand\BackgroundPicture[1]{%
+  \setlength{\unitlength}{1pt}%
+  \put(0,\strip@pt\paperheight){%
+  \parbox[t][\paperheight]{\paperwidth}{%
+    \vspace{0pt}%
+    \includegraphics{#1}
+  }
+}} %
+
+\AtBeginDocument{\AddToShipoutPicture{%
+    \BackgroundPicture{ccms-flyer-bg}%
+    \ClearShipoutPicture}%
+}
+
 
 %%% Define some useful commands.
 
 \renewcommand{\pm}{\textsc{p.m.}\xspace}
 \newcommand{\am}{\textsc{a.m.}\xspace}
-\newcommand{\linesep}{\vspace{1em}\hrulefill\vspace{1em}}
-\newcommand{\linefill}{\vfill{}\vspace{1em}\hrulefill\vspace{1em}\vfill{}}
+% \newcommand{\linesep}{\vspace{1em}\hrulefill\vspace{1em}}
+% \newcommand{\linefill}{\vfill{}\vspace{1em}\hrulefill\vspace{1em}\vfill{}}
+
+
+%%% Define some booleans.
+\newboolean{have@phone}
+\newboolean{have@email}
 
 
 %%% Define some additional informational fields.
 
 \renewcommand{\abstract}[1]{\gdef\@abstract{#1}}
-\newcommand{\@abstract}{\ClassWarningNoLine{colloqflyer}{No
+\newcommand{\@abstract}{ClassWarningNoLine{colloqflyer}{No
     \noexpand\abstract given}}
 \newcommand{\colloqsite}[1]{\gdef\@colloqsite{\begingroup\nobreak\indent\ttfamily#1\endgroup}}
-\newcommand{\@colloqsite}{\ClassWarningNoLine{colloqflyer}{No
+\newcommand{\@colloqsite}{ClassWarningNoLine{colloqflyer}{No
     \noexpand\colloqsite given}} 
 
 
 \newcommand{\speaker}[1]{\gdef\@speaker{#1}}
-\newcommand{\@speaker}{\ClassWarningNoLine{colloqflyer}{No \noexpand\speaker given}}
+\newcommand{\@speaker}{ClassWarningNoLine{colloqflyer}{No
+    \noexpand\speaker given}}
+\newcommand{\speakerorg}[1]{\gdef\@speakerorg{#1}}
+\newcommand{\@speakerorg}{ClassWarningNoLine{colloqflyer}{No
+    \noexpand\speakerorg given}}
 \newcommand{\talktime}[1]{\gdef\@talktime{#1}}
-\newcommand{\@talktime}{\ClassWarningNoLine{colloqflyer}{No
+\newcommand{\@talktime}{ClassWarningNoLine{colloqflyer}{No
     \noexpand\talktime given}}
 \newcommand{\talklocation}[1]{\gdef\@talklocation{#1}}
-\newcommand{\@talklocation}{\ClassWarningNoLine{colloqflyer}{No
+\newcommand{\@talklocation}{ClassWarningNoLine{colloqflyer}{No
     \noexpand\talklocation given}}
 \newcommand{\refreshmenttime}[1]{\gdef\@refreshmenttime{#1}}
-\newcommand{\@refreshmenttime}{\ClassWarningNoLine{colloqflyer}{No
+\newcommand{\@refreshmenttime}{ClassWarningNoLine{colloqflyer}{No
     \noexpand\refreshmenttime given}}
 \newcommand{\refreshmentlocation}[1]{\gdef\@refreshmentlocation{#1}}
-\newcommand{\@refreshmentlocation}{\ClassWarningNoLine{colloqflyer}{No
+\newcommand{\@refreshmentlocation}{ClassWarningNoLine{colloqflyer}{No
     \noexpand\refreshmentlocation given}}
 \newcommand{\host}[1]{\gdef\@host{#1}}
-\newcommand{\@host}{\ClassWarningNoLine{colloqflyer}{No \noexpand\host given}}
-\newcommand{\hostphone}[1]{\gdef\@hostphone{#1}}
-\newcommand{\hostemail}[1]{\gdef\@hostemail{\begingroup\nobreak\indent\ttfamily#1\endgroup}}
-\newcommand{\@hostemail}{\ClassWarningNoLine{colloqflyer}{No \noexpand\hostemail given}}
+\newcommand{\@host}{ClassWarningNoLine{colloqflyer}{No \noexpand\host
+    given}}
+\newcommand{\hostphone}[1]{\setboolean{have@phone}{true}%
+  \gdef\@hostphone{#1}}
+\newcommand{\@hostphone}{\ClassWarningNoLine{colloqflyer}{No
+    \noexpand\hostphone given}}
+\newcommand{\hostemail}[1]{\setboolean{have@email}{true}%
+  \gdef\@hostemail{\begingroup\nobreak\indent\ttfamily\upshape#1\endgroup}}
+\newcommand{\@hostemail}{\ClassWarningNoLine{colloqflyer}{No
+    \noexpand\hostemail given}}
 
 
-
+%%% Throw errors if we don't have either an e-mail address or a
+%%% telephone number for the host.
+\AtBeginDocument{%
+  \ifthenelse{\boolean{have@email}}{}{%
+    \ifthenelse{\boolean{have@phone}}{}{%
+      \ClassError{colloqflyer}{%
+        Neither \noexpand\hostphone nor \noexpand\hostemail was
+        defined}{%
+        One or both of \noexpand\hostphone and \noexpand\hostemail
+        must be defined to typeset the flyer}}}}
 
 
 %%% Typeset the flyer itself.
@@ -107,65 +149,45 @@
 \pagestyle{empty}
 
 
-{\large \textbf{\textsc{Claremont Colleges}} }
-\vspace{1.5em}
+{\Huge\textsc{\@title}\par}
 
-{\huge \textbf{M~A~T~H~E~M~A~T~I~C~S~~C~O~L~L~O~Q~U~I~U~M}}
-
-\linesep
-
-\begin{center}
-\large\textbf{\textsc{\@title}}
-\medskip
-
-\@speaker{}
-
-\end{center}
-\linesep
-
-{\large \textbf{\textsc{Abstract}}}
-
-{
-\setlength{\parindent}{1em}
+\vspace{0.5in}
+\begin{flushright}
+  {\Large \@speaker\par} 
+  {\large \@speakerorg{}\par}
+\end{flushright}
+\vfill{}
 
 \@abstract{}
 
-}
-\linefill
+\vfill{}
 
-{\large \textbf{\textsc{Talk}}}
+{\Large \@date{} at \@talktime{}\\
+\@talklocation{}\par}
 
-\@date{} at \@talktime{}, \@talklocation{}.
-\medskip
+\vfill{}
 
-Coffee and cookies at \@refreshmenttime{}---wine and cheese after the talk, 
-\@refreshmentlocation{}.
+Coffee \& cookies at \@refreshmenttime{}\\
+Wine and cheese after the talk.\\
+\@refreshmentlocation.
 
-\linefill
+\vfill{}
 
-{\large \textbf{\textsc{Dinner}}}
+\begin{em}
+  The dinner will be hosted by \@host{}.\\
+  If interested in attending%
+  \ifthenelse{\boolean{have@phone} \or \boolean{have@email}}{, }{}%
+  \ifthenelse{\boolean{have@phone}}{call \@hostphone}{}%
+  \ifthenelse{\boolean{have@phone} \AND \boolean{have@email}}{ or }{}%
+  \ifthenelse{\boolean{have@email}}{e-mail \@hostemail}{}%
+.\par
+\end{em}
 
-Hosted by \@host{}.  If interested in attending,
+\vfill{}
 
-\ifthenelse{\isundefined{\@hostphone}}%
-  {\ifthenelse{\isundefined{\@hostemail}}%
-    {or e-mail \@hostemail}%
-    {e-mail \@hostemail}%
-  }%
-  {call \@hostphone{}%
-    \ifthenelse{\not\isundefined{\@hostemail}}%
-    { or e-mail \@hostemail}%
-    {}}%
-.
-
-\linefill
-
-{\large \textbf{\textsc{For More Information\ldots{}}}}
-
-For Math Colloquium information, visit the website:\\
+For Math Colloquium information, visit the website\\
 \@colloqsite
 
-\linefill
 
 
 \global\let\author\relax
