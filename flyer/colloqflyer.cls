@@ -162,7 +162,7 @@
 
 \vfill{}
 
-{\Large \@date{} at \@talktime{}\\
+{\Large \@date{}, at \@talktime{}\\
 \@talklocation{}\par}
 
 \vfill{}
