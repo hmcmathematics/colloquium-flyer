@@ -33,8 +33,16 @@
 %%
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{colloqflyer}[2009/01/20 LaTeX class for colloquium flyers]
+
+\newif\if@coffee
+\newif\if@dinner
+\DeclareOption{coffee}{\@coffeetrue}
+\DeclareOption{dinner}{\@dinnertrue}
+\DeclareOption{nocoffee}{\@coffeefalse}
+\DeclareOption{nodinner}{\@dinnerfalse}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
-\ProcessOptions\relax %%% Change if we add options.
+\ExecuteOptions{coffee,dinner}
+\ProcessOptions\relax
 \LoadClass[12pt,oneside]{article}
 
 \RequirePackage{url}
@@ -149,7 +157,7 @@
 \pagestyle{empty}
 
 
-{\Huge\textsc{\@title}\par}
+{\raggedright\Huge\textsc{\@title}\par}
 
 \vspace{0.5in}
 \begin{flushright}
@@ -167,16 +175,19 @@
 
 \vfill{}
 
+\if@coffee
 Coffee \& cookies at \@refreshmenttime{}\\
 Wine and cheese after the talk.\\
 \@refreshmentlocation.
 
 \vfill{}
+\fi
 
+\if@dinner
 \begin{em}
   The dinner will be hosted by \@host{}.\\
   If interested in attending%
-  \ifthenelse{\boolean{have@phone} \or \boolean{have@email}}{, }{}%
+  \ifthenelse{\boolean{have@phone} \OR \boolean{have@email}}{, }{}%
   \ifthenelse{\boolean{have@phone}}{call \@hostphone}{}%
   \ifthenelse{\boolean{have@phone} \AND \boolean{have@email}}{ or }{}%
   \ifthenelse{\boolean{have@email}}{e-mail \@hostemail}{}%
@@ -184,6 +195,7 @@ Wine and cheese after the talk.\\
 \end{em}
 
 \vfill{}
+\fi
 
 For Math Colloquium information, visit the website\\
 \@colloqsite
