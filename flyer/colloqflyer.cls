@@ -177,7 +177,7 @@
 
 \if@coffee
 Coffee \& cookies at \@refreshmenttime{}\\
-Wine and cheese after the talk.\\
+% Wine and cheese after the talk.\\
 \@refreshmentlocation.
 
 \vfill{}
